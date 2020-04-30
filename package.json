@@ -1,0 +1,30 @@
+{
+  "name": "mysite-api",
+  "version": "1.0.0",
+  "description": "Serverless API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chinh-le/mysite-api.git"
+  },
+  "author": "Chinh Le <chinh.dev11@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chinh-le/mysite-api/issues"
+  },
+  "homepage": "https://github.com/chinh-le/mysite-api#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "serverless-bundle": "^1.4.0",
+    "serverless-dotenv-plugin": "^2.4.2",
+    "serverless-offline": "^6.1.4"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.666.0"
+  }
+}
