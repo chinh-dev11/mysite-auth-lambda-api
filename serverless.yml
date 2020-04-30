@@ -23,14 +23,14 @@ org: chinhdev11
 provider:
   name: aws
   runtime: nodejs12.x
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  # you can overwrite defaults here
+  stage: dev
+  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
+  # you can add statements to the Lambda function's IAM Role here
+  # iamRoleStatements:
+  # - Effect: "Allow"
+  # Action:
 #        - "s3:ListBucket"
 #      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
 #    - Effect: "Allow"
@@ -44,11 +44,13 @@ provider:
 #            - "/*"
 
 # you can define service wide environment variables here
-#  environment:
-#    variable1: value1
+# environment:
+# USER_POOL_ID: !Ref CognitoUserPool
+# USER_POOL_CLIENT_ID: !Ref CognitoUserPoolClient
 
 # you can add packaging information here
-#package:
+package:
+  individually: true # Create an optimized package for our functions
 #  include:
 #    - include-me.js
 #    - include-me-dir/**
@@ -56,16 +58,21 @@ provider:
 #    - exclude-me.js
 #    - exclude-me-dir/**
 
-# functions:
-# hello:
-# handler: handler.hello
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
-# events:
-# - http:
-# path: hello
-# method: get
+# plugins:
+# - serverless-bundle # Package our functions with Webpack
+# - serverless-offline
+# - serverless-dotenv-plugin # Load .env as environment variables
+
+functions:
+  signup:
+    handler: auth/signup.main
+    #    The following are a few example events you can configure
+    #    NOTE: Please make sure to change your handler code to work with those events
+    #    Check the event documentation for details
+    events:
+      - http:
+          path: signup
+          method: get
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
@@ -100,7 +107,8 @@ provider:
 #      variable2: value2
 
 # you can add CloudFormation resource templates here
-#resources:
+resources:
+  # - ${file(resources/cognito-user-pool.yml)}
 #  Resources:
 #    NewResource:
 #      Type: AWS::S3::Bucket
