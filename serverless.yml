@@ -20,6 +20,24 @@ org: chinhdev11
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+# you can add packaging information here
+package:
+  individually: true # Create an optimized package for our functions
+#  include:
+#    - include-me.js
+#    - include-me-dir/**
+#  exclude:
+#    - exclude-me.js
+#    - exclude-me-dir/**
+
+plugins:
+  - serverless-bundle # Package our functions with Webpack
+  - serverless-offline
+  - serverless-dotenv-plugin # Load .env as environment variables
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -31,39 +49,46 @@ provider:
   # iamRoleStatements:
   # - Effect: "Allow"
   # Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+  #        - "s3:ListBucket"
+  #      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+  #    - Effect: "Allow"
+  #      Action:
+  #        - "s3:PutObject"
+  #      Resource:
+  #        Fn::Join:
+  #          - ""
+  #          - - "arn:aws:s3:::"
+  #            - "Ref" : "ServerlessDeploymentBucket"
+  #            - "/*"
 
-# you can define service wide environment variables here
-# environment:
-# USER_POOL_ID: !Ref CognitoUserPool
-# USER_POOL_CLIENT_ID: !Ref CognitoUserPoolClient
-
-# you can add packaging information here
-package:
-  individually: true # Create an optimized package for our functions
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
-
-# plugins:
-# - serverless-bundle # Package our functions with Webpack
-# - serverless-offline
-# - serverless-dotenv-plugin # Load .env as environment variables
+  # you can define service wide environment variables here
+  environment:
+    # REGION: !Ref AWS::Region
+    USER_POOL_ID: !Ref CognitoUserPool
+    USER_POOL_CLIENT_ID: !Ref CognitoUserPoolClient
+    # IDENTITY_POOL_ID: !Ref CognitoIdentityPool
 
 functions:
+  users:
+    handler: auth/users.main
+    events:
+      - http:
+          path: users
+          method: get
+          # cors: true
+  signin:
+    handler: auth/signin.main
+    events:
+      - http:
+          path: signin
+          method: post
+          # cors: true
+  signupConfirm:
+    handler: auth/signupConfirm.main
+    events:
+      - http:
+          path: signupConfirm
+          method: post
   signup:
     handler: auth/signup.main
     #    The following are a few example events you can configure
@@ -72,7 +97,7 @@ functions:
     events:
       - http:
           path: signup
-          method: get
+          method: post
 #      - websocket: $connect
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
@@ -102,13 +127,9 @@ functions:
 #            host: example.com
 #            path: /hello
 
-#    Define function environment variables here
-#    environment:
-#      variable2: value2
-
 # you can add CloudFormation resource templates here
 resources:
-  # - ${file(resources/cognito-user-pool.yml)}
+  - ${file(resources/cognito-user-pool.yml)}
 #  Resources:
 #    NewResource:
 #      Type: AWS::S3::Bucket

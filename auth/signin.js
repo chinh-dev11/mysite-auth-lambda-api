@@ -22,7 +22,7 @@ exports.main = async (event, context) => {
   });
 
   try {
-    const user = await Auth.signUp('chinh.testing11@gmail.com', 'Passw0rd!');
+    const user = await Auth.signIn('chinh.testing11@gmail.com', 'Passw0rd!');
     console.log('user: ', user);
 
     return {
@@ -32,7 +32,8 @@ exports.main = async (event, context) => {
         'Access-Control-Allow-Credentials': true,
       },
       body: JSON.stringify({
-        userConfirmed: user.userConfirmed,
+        accessToken: user.signInUserSession.accessToken,
+        refreshToken: user.signInUserSession.refreshToken,
       }),
     };
   } catch (e) {
