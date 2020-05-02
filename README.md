@@ -1,1 +1,1 @@
-# mysite-api
+# mysite-auth-lambda-api

@@ -11,9 +11,9 @@
 #
 # Happy Coding!
 
-service: mysite-api
+service: mysite-auth-lambda-api
 # app and org for use with dashboard.serverless.com
-app: mysite-api
+app: mysite-auth-lambda-api
 org: chinhdev11
 
 # You can pin your service to only deploy with a specific Serverless version
